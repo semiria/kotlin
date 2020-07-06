@@ -28,6 +28,22 @@ version = "2020.1"
 project {
 
     buildType(Build)
+
+    features {
+        feature {
+            id = "PROJECT_EXT_3"
+            type = "OAuthProvider"
+            param("endpoint", "approle")
+            param("role-id", "9a28f343-ce46-50d8-0279-a0ebaa6bfc99")
+            param("displayName", "Connection vault on project")
+            param("secure:secret-id", "credentialsJSON:a0ef4086-43ca-4b03-a962-7a966dd9049a")
+            param("namespace", "")
+            param("fail-on-error", "true")
+            param("vault-namespace", "")
+            param("providerType", "teamcity-vault")
+            param("url", "https://vault.stef.us1.dev.riq.com")
+        }
+    }
 }
 
 object Build : BuildType({
@@ -40,28 +56,6 @@ object Build : BuildType({
 
     triggers {
         vcs {
-        }
-    }
-
-    id("Build")
-    steps {
-        script {
-            name = "Set version using script"
-            scriptContent = """
-      #!/bin/bash
-      HASH=%build.vcs.number%
-      SHORT_HASH=${"$"}{HASH:0:7}
-      BUILD_COUNTER=%build.counter%
-      BUILD_NUMBER="1.0${"$"}BUILD_COUNTER.${"$"}SHORT_HASH"
-      echo "##teamcity[buildNumber '${"$"}BUILD_NUMBER']"
-      """.trimIndent()
-        }
-        script {
-            name = "build"
-            scriptContent = """
-      mkdir bin
-      echo "built artifact" > bin/compiled.txt
-      """.trimIndent()
         }
     }
 })
